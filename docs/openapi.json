@@ -1,0 +1,913 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SoftHub API",
+    "version": "1.0.0",
+    "description": "Serverless software marketplace API"
+  },
+  "components": {
+    "securitySchemes": {
+      "cognito": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/categories": {
+      "get": {
+        "summary": "List categories",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Browse and search products",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/products/{productId}": {
+      "get": {
+        "summary": "Product details",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/products/{productId}/reviews": {
+      "get": {
+        "summary": "Reviews, newest first",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Write or edit my review",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/products/{productId}/insights": {
+      "get": {
+        "summary": "Review sentiment summary",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/products/{productId}/related": {
+      "get": {
+        "summary": "Related products",
+        "tags": [
+          "catalog"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "summary": "My profile",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer",
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/me/recommendations": {
+      "get": {
+        "summary": "Recommended for me",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "View cart",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Empty cart",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/cart/{productId}": {
+      "put": {
+        "summary": "Add to cart",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove from cart",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/checkout": {
+      "post": {
+        "summary": "Start checkout (Idempotency-Key)",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "My orders",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "get": {
+        "summary": "One order with licence keys",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/downloads/{productId}": {
+      "get": {
+        "summary": "Presigned installer download",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/library": {
+      "get": {
+        "summary": "My licences",
+        "tags": [
+          "shop"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Consumer"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/provider/products": {
+      "get": {
+        "summary": "My listings",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create listing",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/provider/products/{productId}": {
+      "put": {
+        "summary": "Edit listing (optimistic lock)",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archive listing",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/provider/products/{productId}/uploads": {
+      "post": {
+        "summary": "Presigned upload URL",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/provider/dashboard": {
+      "get": {
+        "summary": "Sales and sentiment dashboard",
+        "tags": [
+          "provider"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Provider",
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "summary": "Find a user by e-mail",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/admin/users/{sub}/status": {
+      "put": {
+        "summary": "Suspend or reinstate",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "sub",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/admin/metrics": {
+      "get": {
+        "summary": "Platform metrics",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "cognito": []
+          }
+        ],
+        "x-roles": [
+          "Admin"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Sign in required"
+          },
+          "403": {
+            "description": "Wrong role or suspended"
+          }
+        }
+      }
+    },
+    "/webhooks/stripe": {
+      "post": {
+        "summary": "Stripe events (signed)",
+        "tags": [
+          "webhook"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    }
+  }
+}
