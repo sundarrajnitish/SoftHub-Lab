@@ -1,0 +1,250 @@
+{
+  "dev": {
+    "n": 98,
+    "accuracy": 0.888,
+    "macroF1": 0.848,
+    "polarAccuracy": 0.907,
+    "majorityBaseline": 0.459,
+    "perClass": {
+      "positive": {
+        "precision": 0.93,
+        "recall": 0.889,
+        "f1": 0.909,
+        "n": 45
+      },
+      "neutral": {
+        "precision": 0.692,
+        "recall": 0.75,
+        "f1": 0.72,
+        "n": 12
+      },
+      "negative": {
+        "precision": 0.905,
+        "recall": 0.927,
+        "f1": 0.916,
+        "n": 41
+      }
+    },
+    "confusion": {
+      "positive": {
+        "positive": 40,
+        "neutral": 3,
+        "negative": 2
+      },
+      "neutral": {
+        "positive": 1,
+        "neutral": 9,
+        "negative": 2
+      },
+      "negative": {
+        "positive": 2,
+        "neutral": 1,
+        "negative": 38
+      }
+    },
+    "errors": [
+      {
+        "text": "Does exactly what it says on the tin.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "This is the password manager I always wanted.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Can't imagine working without it now.",
+        "label": "positive",
+        "predicted": "negative",
+        "compound": -0.114
+      },
+      {
+        "text": "Runs well on my older Mac, which surprised me.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Paid for a year and the catalogue is tiny.",
+        "label": "negative",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Some things are good, some are bad.",
+        "label": "neutral",
+        "predicted": "negative",
+        "compound": -0.153
+      },
+      {
+        "text": "Works on Windows 11.",
+        "label": "neutral",
+        "predicted": "positive",
+        "compound": 0.25
+      },
+      {
+        "text": "Never had a single problem with it.",
+        "label": "positive",
+        "predicted": "negative",
+        "compound": -0.382
+      },
+      {
+        "text": "Meh. The trial was better than the paid version.",
+        "label": "negative",
+        "predicted": "positive",
+        "compound": 0.202
+      },
+      {
+        "text": "Support was polite but couldn't fix anything.",
+        "label": "negative",
+        "predicted": "positive",
+        "compound": 0.128
+      },
+      {
+        "text": "Fine. Does what it says, a bit pricey.",
+        "label": "neutral",
+        "predicted": "negative",
+        "compound": -0.25
+      }
+    ]
+  },
+  "test": {
+    "n": 99,
+    "accuracy": 0.848,
+    "macroF1": 0.799,
+    "polarAccuracy": 0.862,
+    "majorityBaseline": 0.465,
+    "perClass": {
+      "positive": {
+        "precision": 0.929,
+        "recall": 0.848,
+        "f1": 0.886,
+        "n": 46
+      },
+      "neutral": {
+        "precision": 0.529,
+        "recall": 0.75,
+        "f1": 0.621,
+        "n": 12
+      },
+      "negative": {
+        "precision": 0.9,
+        "recall": 0.878,
+        "f1": 0.889,
+        "n": 41
+      }
+    },
+    "confusion": {
+      "positive": {
+        "positive": 39,
+        "neutral": 6,
+        "negative": 1
+      },
+      "neutral": {
+        "positive": 0,
+        "neutral": 9,
+        "negative": 3
+      },
+      "negative": {
+        "positive": 3,
+        "neutral": 2,
+        "negative": 36
+      }
+    },
+    "errors": [
+      {
+        "text": "Honestly the smoothest editing software I've tried.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Rock-solid backups, restored my whole drive without a hitch.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "The learning curve is real, but the payoff is huge.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Handles my huge spreadsheets without breaking a sweat.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Does everything I need for my channel.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Could not activate it at all.",
+        "label": "negative",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Mediocre at best.",
+        "label": "negative",
+        "predicted": "positive",
+        "compound": 0.382
+      },
+      {
+        "text": "It slows my whole PC to a crawl.",
+        "label": "negative",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Some good ideas, some bad ones.",
+        "label": "neutral",
+        "predicted": "negative",
+        "compound": -0.153
+      },
+      {
+        "text": "Average. A few bugs, a few nice touches.",
+        "label": "neutral",
+        "predicted": "negative",
+        "compound": -0.052
+      },
+      {
+        "text": "Haven't had a single issue.",
+        "label": "positive",
+        "predicted": "negative",
+        "compound": -0.296
+      },
+      {
+        "text": "Cheap and it feels cheap.",
+        "label": "negative",
+        "predicted": "positive",
+        "compound": 0.382
+      },
+      {
+        "text": "The demo was better than the full version.",
+        "label": "negative",
+        "predicted": "positive",
+        "compound": 0.421
+      },
+      {
+        "text": "Couldn't ask for more.",
+        "label": "positive",
+        "predicted": "neutral",
+        "compound": 0
+      },
+      {
+        "text": "Fine, a little expensive.",
+        "label": "neutral",
+        "predicted": "negative",
+        "compound": -0.318
+      }
+    ]
+  }
+}
