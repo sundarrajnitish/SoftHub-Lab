@@ -66,3 +66,37 @@ export function chip(text, kind = '') { return h('span', { class: `chip ${kind}`
 export function flash(el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
 
 export const statusKind = (st) => ({ PAID: 'good', PENDING_PAYMENT: 'warn', CANCELLED: 'bad', REFUNDED: 'bad', PARTIALLY_REFUNDED: 'warn', ACTIVE: 'good', SUSPENDED: 'bad', PUBLISHED: 'good', DRAFT: 'warn' }[st] || '');
+
+let coverSeq = 0;
+/** Wide product cover (16:10), generated from the product's name. */
+export function cover(image, name = '') {
+  const img = image || { hue: 20, hue2: 200, glyph: 0, monogram: '?' };
+  const id = `cv${++coverSeq}`;
+  const g = GLYPHS[img.glyph % GLYPHS.length];
+  const tiles = [];
+  for (let i = 0; i < 5; i++) {
+    tiles.push(s('path', { d: g, fill: 'none', stroke: 'rgba(255,255,255,.16)', 'stroke-width': 1.1, transform: `translate(${88 + i * 26 - (i % 2) * 8},${-6 + i * 14}) scale(${1.6 + i * 0.35}) rotate(${i * 9} 16 16)` }));
+  }
+  return s('svg', { class: 'cover', viewBox: '0 0 320 200', role: 'img', 'aria-label': name, preserveAspectRatio: 'xMidYMid slice' },
+    s('defs', {}, s('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 1 },
+      s('stop', { offset: 0, 'stop-color': `hsl(${img.hue} 66% 54%)` }),
+      s('stop', { offset: 1, 'stop-color': `hsl(${img.hue2} 58% 28%)` }))),
+    s('rect', { width: 320, height: 200, fill: `url(#${id})` }),
+    ...tiles,
+    s('text', { x: 22, y: 168, 'font-size': 54, 'font-weight': 800, fill: 'rgba(255,255,255,.95)', 'font-family': 'Bricolage Grotesque, system-ui, sans-serif', 'letter-spacing': -2 }, img.monogram),
+    s('text', { x: 24, y: 36, 'font-size': 13, 'font-weight': 600, fill: 'rgba(255,255,255,.8)', 'font-family': 'Instrument Sans, system-ui, sans-serif' }, name.length > 30 ? `${name.slice(0, 29)}…` : name));
+}
+
+export function avatar(label, hue = 210) {
+  const initials = label.replace(/\(.*\)/, '').trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase() || '?';
+  return h('span', { class: 'avatar', style: { background: `hsl(${hue} 55% 45%)` } }, initials);
+}
+
+export function icon(name, size = 16) {
+  const P = {
+    check: 'M5 12l5 5 9-11', copy: 'M9 9h10v10H9z M5 15V5h10', down: 'M12 4v12m-5-5 5 5 5-5 M5 20h14',
+    bolt: 'M13 3 5 14h6l-1 7 8-11h-6z', card: 'M3 6h18v12H3z M3 10h18', mail: 'M3 5h18v14H3z M3 7l9 6 9-6',
+    key: 'M15 7a4 4 0 1 1-3.9 5H7v3H5v-3H3v-2h8.1A4 4 0 0 1 15 7z', store: 'M4 9h16l-1-5H5z M5 9v11h14V9',
+  };
+  return s('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, s('path', { d: P[name] }));
+}

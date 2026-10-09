@@ -2,7 +2,7 @@
 
 A serverless marketplace for software licences on AWS. Providers list desktop software and subscriptions; buyers pay by card and receive licence keys by e-mail within seconds, then download installers from their library. Reviews are scored for sentiment and summarised per aspect, and every product page recommends related products.
 
-**Interactive site:** https://sundarrajnitish.github.io/SoftHub-Lab/ runs the real backend code in your browser. Buy something, switch roles, forge a token, flood the payment webhook with duplicates, then audit every licence and cent.
+**Live demo:** https://sundarrajnitish.github.io/SoftHub-Lab/ is SoftHub itself, with the real backend code running in your browser. Shop as a buyer, pay with a test card and watch the licence key land in the inbox, review what you bought, publish a product from a studio, run the platform as an admin, and open “Behind the scenes” to see each click travel through API Gateway, Lambda, DynamoDB, Stripe and SES.
 
 ![Architecture: browser → API Gateway (JWT) → Lambda functions → DynamoDB; Stripe webhooks; DynamoDB stream → SES; Cognito; S3](docs/img/architecture.svg)
 
@@ -112,11 +112,11 @@ From `npm run simulate` (seeded, so re-runs reproduce the numbers; latencies are
 | endpoint down on first try | 414 | 0 | 207 | 5.9 / 6.5 | 13/13 |
 | storm: duplicates + failures + 20 s jitter | 381 | 128 | 82 | 4.6 / 19.7 | 13/13 |
 
-**Launch day** — 2,400 shopping sessions shaped like a Montréal evening with a 7 pm spike: 21,242 requests, 290 orders, 1.3 % of requests on a cold container; catalogue p50 15 ms, checkout path p95 380 ms (includes the Stripe call). About US$0.07 of AWS per day (≈ US$2.10 a month at that rate), against C$756 of card fees: per-transaction costs dominate.
+**Launch day** — 2,400 shopping sessions shaped like a Montréal evening with a 7 pm spike: 21,242 requests, 290 orders, 1.3 % of requests on a cold container; catalogue p50 15 ms, checkout path p95 380 ms (includes the Stripe call). About US$0.07 of AWS per day (≈ US$2.10 a month at that rate).
 
-**Sentiment** — 84.8 % accuracy (macro-F1 0.80, positive-vs-negative 86.2 %) on 99 held-out reviews written and labelled for this project, against a 46.5 % majority-class baseline; 88.8 % on the 98-review development set used to build the lexicon. Stars and text agree on 94 % of generated 4–5★ and 1–2★ reviews.
+**Sentiment** — 84.8 % accuracy (macro-F1 0.80) on 99 held-out reviews written and labelled for this project; stars and text agree on 94 % of generated 4–5★ and 1–2★ reviews, and the rest are flagged to providers.
 
-**Recommendations** — leave-last-out hit rate @ 5 over 353 simulated shoppers on fresh seeds: content + ½ × co-purchase 44.2 %, content only 42.2 %, co-purchase only 33.4 %, popularity 27.5 %, random 23.8 %.
+**Recommendations** — content similarity plus half the co-purchase cosine; the right product is in the top five for 44.2 % of 353 simulated shoppers when their latest purchase is held out.
 
 ## Repository layout
 

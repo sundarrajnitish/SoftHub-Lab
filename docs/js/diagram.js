@@ -1,6 +1,6 @@
 // Hero: the architecture as a live diagram. Every request the in-page backend
 // serves sends a packet along the wires it actually used.
-import { s, $, mount, h, ms } from './ui.js';
+import { s, $ } from './ui.js';
 
 const N = {
   cognito: { x: 16, y: 34, w: 118, h: 44, t: 'Cognito', sub: 'user pool' },
@@ -39,22 +39,30 @@ function wires() {
 }
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let svg, layer, ticker;
-const nodeEls = {}, wireEls = {};
+let svg, layer;
+let nodeEls = {}, wireEls = {};
 
-function draw() {
-  wires();
+/** Draw the architecture into an <svg>; returns the node and wire elements. */
+export function drawDiagram(target) {
+  if (!Object.keys(W).length) wires();
+  const nodes = {}, ws = {};
   const g = [];
-  for (const [id, d] of Object.entries(W)) g.push(wireEls[id] = s('path', { class: 'wire', d, id: `w-${id}` }));
+  for (const [id, d] of Object.entries(W)) g.push(ws[id] = s('path', { class: 'wire', d }));
   for (const [id, n] of Object.entries(N)) {
-    g.push(nodeEls[id] = s('g', { class: `node${n.ext ? ' ext' : ''}` },
+    g.push(nodes[id] = s('g', { class: `node${n.ext ? ' ext' : ''}` },
       s('rect', { x: n.x, y: n.y, width: n.w, height: n.h, rx: 9 }),
       s('text', { x: n.x + 10, y: n.y + (n.h > 44 ? 24 : 18) }, n.t),
       s('text', { class: 'sub', x: n.x + 10, y: n.y + (n.h > 44 ? 40 : 32) }, n.sub)));
   }
-  layer = s('g', {});
-  g.push(layer);
-  svg.append(...g);
+  const lay = s('g', {});
+  g.push(lay);
+  target.replaceChildren(...g);
+  return { nodes, wires: ws, layer: lay };
+}
+
+function draw() {
+  const d = drawDiagram(svg);
+  nodeEls = d.nodes; wireEls = d.wires; layer = d.layer;
 }
 
 function pulse(id) {
@@ -67,7 +75,7 @@ function pulse(id) {
 
 const queue = [];
 let running = 0;
-function travel(route, cls = '') {
+let travel = function travel(route, cls = '') {
   if (reduce) { for (const [w] of route) { const [a, b] = w.split('-'); pulse(a); pulse(b); } return; }
   if (running > 6) { queue.push([route, cls]); if (queue.length > 12) queue.shift(); return; }
   running++;
@@ -97,34 +105,28 @@ function travel(route, cls = '') {
   step();
 }
 
-function tick(line) {
-  const rows = [...ticker.children].slice(0, 1);
-  mount(ticker, h('div', {}, line), ...rows);
-}
-
 export function initDiagram(app) {
   svg = $('#arch');
-  ticker = $('#ticker');
   draw();
+  // animate only while the drawer is open
+  const travelReal = travel;
+  // eslint-disable-next-line no-func-assign
+  travel = (route, cls) => { if (app.scenesOpen) travelReal(route, cls); };
   app.on('rt:request', ({ trace }) => {
     const fn = trace.fn;
     if (trace.source === 'dynamodb-stream') {
       travel([['ddb-mailer'], ['mailer-ses'], ['ses-browser']], 'stream');
-      tick(`stream  INSERT ${trace.path.split('#')[0].replace('INSERT ', '')}# → mailer → SES → inbox`);
       return;
     }
     const start = trace.source === 'stripe' ? [['stripe-apigw']] : [['browser-apigw']];
     if (trace.gateway) {
       travel(start, 'err');
-      tick(`${trace.method} ${trace.path}  ${trace.status} at the gateway · ${trace.response?.error?.message || ''}`);
       return;
     }
     const route = [...start, [`apigw-${fn}`]];
     if (trace.ops.length) route.push([`${fn}-ddb`]);
     if (trace.stripe.length) route.push(['lambda-stripe']);
     travel(route, trace.source === 'stripe' ? 'stripe' : trace.status >= 400 ? 'err' : '');
-    const ops = trace.ops.length ? ` · ${trace.ops.length} table call${trace.ops.length > 1 ? 's' : ''}` : '';
-    tick(`${trace.method} ${trace.path}  ${trace.status} · λ ${fn} (${trace.cold ? 'cold' : 'warm'})${ops} · ${ms(trace.totalMs)}`);
   });
   app.on('rt:stripe', ({ rec }) => {
     if (rec.kind === 'api' && /confirm|3-D/.test(rec.call)) travel([['browser-stripe']], 'stripe');

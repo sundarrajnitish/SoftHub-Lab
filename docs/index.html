@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SoftHub Lab</title>
-<meta name="description" content="SoftHub, a serverless software marketplace on AWS — with its whole backend running live in this page, so you can buy, break and inspect it.">
+<title>SoftHub</title>
+<meta name="description" content="SoftHub, a marketplace for software licences. A working demo: browse, buy, get your licence key by e-mail, review, sell and run the platform — with the whole serverless backend running in this page.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -12,354 +12,61 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e2560a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='sans-serif' font-weight='800' font-size='17' fill='white'%3ES%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<header class="top page">
+<div class="ribbon">
   <div class="wrap">
-    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">S</span>SoftHub Lab</a>
-    <span class="status-dot" id="live-dot" title="Starting the backend…"></span>
-    <nav aria-label="Sections">
-      <a href="#store">Storefront</a>
-      <a href="#identity">Identity</a>
-      <a href="#table">Data</a>
-      <a href="#payments">Payments</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#recs">Recommendations</a>
-      <a href="#scale">Scale &amp; cost</a>
-      <a href="#results">Results</a>
-      <a href="#build">Build</a>
-    </nav>
+    <span class="boot-dot" id="boot-dot"></span>
+    <span class="grow" id="ribbon-text"><b>Live demo.</b> The whole marketplace, including its cloud backend, runs in this tab. Test cards only; nothing is charged.</span>
+    <button type="button" id="ribbon-about">About the project</button>
   </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <button type="button" class="brand" id="home-link" aria-label="SoftHub home"><span class="brand-mark" aria-hidden="true">S</span>SoftHub</button>
+    <form class="search" id="search" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="q" placeholder="Search software, studios, tags" aria-label="Search">
+    </form>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="scenes-btn" aria-pressed="false" title="See what the cloud does for each click">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="txt">Behind the scenes</span>
+      </button>
+      <button type="button" class="icon-btn" id="inbox-btn" title="Inbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="txt">Inbox</span><span class="badge-n" id="inbox-n" hidden>0</span>
+      </button>
+      <button type="button" class="icon-btn" id="cart-btn" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg><span class="txt">Cart</span><span class="badge-n" id="cart-n" hidden>0</span>
+      </button>
+      <button type="button" class="icon-btn" id="account-btn"><span class="avatar" id="account-avatar">?</span><span class="txt" id="account-name">Sign in</span></button>
+    </div>
+  </div>
+  <div class="wrap"><nav class="navrow" id="navrow" aria-label="Main"></nav></div>
 </header>
 
-<main class="page" id="top">
-  <section class="hero wrap">
-    <div class="hero-grid">
-      <div>
-        <p class="eyebrow">Serverless marketplace · AWS · Stripe</p>
-        <h1>Buy software.<br>Watch the <em>cloud</em> sell it.</h1>
-        <p class="lede">SoftHub sells licence keys for desktop software. Providers list products, buyers pay by card and get keys by e-mail in seconds. This page runs the real backend code in your browser, so every click below travels through the same API, table design and payment handling that run on AWS Lambda.</p>
-        <div class="cta">
-          <a class="btn primary" href="#store">Open the storefront</a>
-          <a class="btn" href="#payments">Break the payments</a>
-        </div>
-        <div class="slip" aria-label="Example receipt">
-          <div class="slip-row"><span>ORDER</span><b id="slip-order">ord_01K…</b></div>
-          <div class="slip-row"><span>Quillwork Notes</span><b>C$29.00</b></div>
-          <div class="slip-row"><span>LICENCE</span><b class="key" id="slip-key">SHUB-•••••-•••••-•••••-•••••</b></div>
-          <div class="slip-row muted"><span>issued by</span><span>signed webhook, not the browser</span></div>
-        </div>
-      </div>
-      <figure class="arch" style="margin:0">
-        <svg id="arch" viewBox="0 0 640 380" role="img" aria-labelledby="arch-title">
-          <title id="arch-title">Architecture: browser, API Gateway, Lambda functions, DynamoDB, Stripe, Cognito, S3 and SES</title>
-        </svg>
-        <div class="arch-legend">
-          <span><i style="background:var(--flow)"></i>your requests</span>
-          <span><i style="background:var(--accent)"></i>Stripe webhooks</span>
-          <span><i style="background:var(--warn)"></i>table stream → e-mail</span>
-          <span><i style="background:var(--bad)"></i>rejected</span>
-        </div>
-        <div class="ticker" id="ticker" aria-live="off"><div>Waiting for the first request…</div></div>
-      </figure>
-    </div>
-  </section>
-
-  <section class="wrap" aria-label="Headline results">
-    <div class="stats" id="stats">
-      <div class="stat"><b id="st-dupes">—</b><span>webhook deliveries in the chaos runs, with zero double fulfilments</span></div>
-      <div class="stat"><b id="st-cost">—</b><span>AWS bill per month at launch-day traffic (modelled)</span></div>
-      <div class="stat"><b id="st-cold">—</b><span>of requests hit a cold Lambda container on launch day</span></div>
-      <div class="stat"><b id="st-sent">—</b><span>review sentiment accuracy on a held-out set</span></div>
-    </div>
-  </section>
-
-  <!-- ================================================================ STOREFRONT -->
-  <section class="section wrap" id="store">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 1 · the whole system</p><h2>A working storefront</h2></div>
-      <p class="intro">Switch between a visitor, a buyer, a provider and an admin. Everything happens against an in-memory copy of the backend: the same route handlers, the same single-table layout, a Stripe stand-in that signs and delivers webhooks, and a mail queue fed by the table's change stream. Each request lands in the inspector below with its keys, capacity units and modelled latency.</p>
-    </div>
-    <div class="store">
-      <div class="bench" id="shop">
-        <div class="loading-veil"><span class="spin"></span>Seeding the marketplace: 6 studios, 27 products and about 200 past orders, placed through the public API…</div>
-      </div>
-      <div class="side">
-        <div class="bench persona" id="persona"></div>
-        <div class="bench" id="basket"></div>
-        <div class="bench" id="mailbox"></div>
-      </div>
-    </div>
-
-    <div class="bench" style="margin-top:14px">
-      <div class="row spread" style="margin-bottom:10px">
-        <div><p class="label">Under the hood</p><h3>Request inspector</h3></div>
-        <div class="row"><span class="chip" id="trace-count">0 requests</span><span class="chip flow" id="warm-count">0 warm containers</span><button class="btn sm" id="trace-clear">Clear</button></div>
-      </div>
-      <div class="traces">
-        <div class="trace-list" id="trace-list" role="listbox" aria-label="Requests"></div>
-        <div id="trace-detail"><p class="empty">Pick a request to see what it cost and where its time went.</p></div>
-      </div>
-    </div>
-    <p class="note small" style="margin-top:12px">Latencies are <b>modelled</b> from typical published figures (DynamoDB single-digit milliseconds, a ~240 ms Node.js cold start, ~280 ms per Stripe call); capacity units are computed with DynamoDB's own rules (1 KB per write unit, 4 KB per read unit, half for eventually consistent reads, double inside transactions).</p>
-  </section>
-
-  <!-- ================================================================ IDENTITY -->
-  <section class="section wrap" id="identity">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 2 · who may call what</p><h2>Roles live in the token, and the token is signed</h2></div>
-      <p class="intro">Cognito puts the user's groups in the access token. API Gateway's JWT authorizer checks the signature, issuer, client and expiry before any Lambda runs, so a forged token costs nothing. Roles are assigned server-side by the post-confirmation trigger: you can sign up as a buyer or a provider, never as an admin.</p>
-    </div>
-    <div class="cols cols-2">
-      <div class="bench">
-        <div class="row spread"><p class="label">Current access token</p><span class="chip" id="tok-who">visitor</span></div>
-        <div class="jwt" id="jwt" style="margin-top:8px">Sign in as someone in the storefront to get a token.</div>
-        <dl class="kv" id="claims" style="margin-top:10px"></dl>
-      </div>
-      <div class="bench">
-        <p class="label">Try to become an admin</p>
-        <p class="small muted" style="margin:6px 0 10px">Rewrite the groups claim of your token to <code>["Admin"]</code>, keep the signature, and call the admin metrics route.</p>
-        <div class="row"><button class="btn primary" id="forge">Forge and send</button><button class="btn" id="honest">Send my real token</button></div>
-        <pre class="code" id="forge-out" style="margin-top:10px">—</pre>
-      </div>
-    </div>
-    <div class="bench">
-      <div class="row spread" style="margin-bottom:8px"><p class="label">Route permissions, read from the route table</p><span class="small muted">✓ = role allowed · click a row to call it as the current persona</span></div>
-      <div class="scroll-x"><table class="matrix" id="matrix"></table></div>
-    </div>
-  </section>
-
-  <!-- ================================================================ TABLE -->
-  <section class="section wrap" id="table">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 3 · single-table design</p><h2>One table, twelve questions, no scans</h2></div>
-      <p class="intro">Every entity lives in one DynamoDB table. Keys are designed from the questions the app asks, so each page is a GetItem or a Query on one partition. Pick a question to run it against the live table: the rows it reads light up, and the meter compares its read cost with scanning everything.</p>
-    </div>
-    <div class="cols cols-37">
-      <div class="bench">
-        <p class="label" style="margin-bottom:8px">Access patterns</p>
-        <div class="patterns" id="patterns"></div>
-      </div>
-      <div class="bench">
-        <div class="row spread" style="margin-bottom:8px">
-          <div><p class="label" id="q-call">Query</p><code class="small" id="q-key">—</code></div>
-          <span class="chip flow" id="q-rows">0 rows</span>
-        </div>
-        <div class="meter-pair" id="q-meter"></div>
-        <div class="table-box" style="margin-top:10px"><table class="items" id="items"></table></div>
-        <p class="small muted" style="margin-top:8px" id="table-size"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ PAYMENTS -->
-  <section class="section wrap" id="payments">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 4 · exactly once</p><h2>Stripe will repeat itself. Licences must not.</h2></div>
-      <p class="intro">Webhooks arrive at least once: sometimes twice, sometimes late, sometimes after your endpoint failed and Stripe retried. The handler verifies the signature, then applies the effect and records the event id in one DynamoDB transaction guarded by the order's state. A duplicate fails the guard and changes nothing. Turn up the chaos, run a batch of checkouts and audit the result.</p>
-    </div>
-    <div class="cols cols-73">
-      <div class="bench">
-        <div class="cols cols-2" style="gap:10px 18px">
-          <label class="field"><span>Duplicate deliveries: <b id="v-dup">50 %</b></span><input type="range" id="c-dup" min="0" max="100" value="50"></label>
-          <label class="field"><span>First attempt fails (endpoint down): <b id="v-drop">30 %</b></span><input type="range" id="c-drop" min="0" max="100" value="30"></label>
-          <label class="field"><span>Delivery jitter: <b id="v-jit">3 s</b></span><input type="range" id="c-jit" min="0" max="10" value="3"></label>
-          <label class="field"><span>Card mix</span>
-            <select id="c-cards"><option value="mixed">Mixed: declines, 3-D Secure, success</option><option value="ok">All succeed</option></select>
-          </label>
-        </div>
-        <div class="row" style="margin-top:12px"><button class="btn primary" id="run-chaos">Run 12 checkouts</button><button class="btn" id="run-audit">Audit everything</button><span class="small muted" id="chaos-status"></span></div>
-        <div class="lanes" style="margin-top:12px"><canvas id="lanes" width="900" height="260" aria-label="Timeline of payments and webhook deliveries"></canvas></div>
-        <div class="legend" style="margin-top:8px">
-          <span><i style="background:var(--flow)"></i>payment confirmed in the browser</span>
-          <span><i style="background:var(--good)"></i>delivery fulfilled the order</span>
-          <span><i style="background:var(--warn)"></i>duplicate absorbed</span>
-          <span><i style="background:var(--bad)"></i>delivery failed, Stripe retries</span>
-          <span><i style="background:var(--muted)"></i>decline recorded</span>
-        </div>
-        <div class="prose small muted" style="margin-top:12px">
-          <p>Each row is one buyer. The square is the moment the card is confirmed in the browser; every dot after it is Stripe knocking on the webhook. A red dot is an attempt our endpoint "missed", which Stripe retries 5 seconds later. An amber dot is a second copy of an event that was already applied: the transaction's condition on the event id fails, the handler answers 200, and nothing changes. Only one green dot per row can ever exist.</p>
-          <p>Mixed card runs include a decline followed by a retry (grey, then green) and a 3-D Secure challenge approved after a pause.</p>
-        </div>
-      </div>
-      <div class="side">
-        <div class="bench">
-          <p class="label">Deliveries this run</p>
-          <div class="tally" id="tally" style="margin-top:8px"></div>
-        </div>
-        <div class="bench fsm">
-          <p class="label">Order state machine (live counts)</p>
-          <svg id="fsm" viewBox="0 0 420 190" role="img" aria-label="Order states"></svg>
-        </div>
-        <div class="bench">
-          <p class="label">Audit</p>
-          <div class="checks" id="checks" style="margin-top:8px"><p class="empty">Run the audit to recount every licence, counter, charge and e-mail from scratch.</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="bench">
-      <div class="row spread"><p class="label">Signature check</p><span class="small muted">Stripe-Signature: t=…,v1=HMAC-SHA256(secret, "t.body")</span></div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn sm" data-sig="valid">Replay a real event</button>
-        <button class="btn sm" data-sig="tamper">Change the amount, keep the signature</button>
-        <button class="btn sm" data-sig="old">Re-sign with a 1-hour-old timestamp</button>
-        <button class="btn sm" data-sig="wrong">Sign with the wrong secret</button>
-      </div>
-      <pre class="code" id="sig-out" style="margin-top:10px">Make a purchase first, then try these.</pre>
-    </div>
-  </section>
-
-  <!-- ================================================================ REVIEWS -->
-  <section class="section wrap" id="reviews">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 5 · what buyers say</p><h2>Sentiment you can read token by token</h2></div>
-      <p class="intro">Each review is scored once, when it is written, by a rule-based lexicon model built for software reviews: word valences, negation, boosters, "but" clauses, capitals and exclamation marks. It runs in under a millisecond, explains every point of its score, and gives the same answer every time, so product aggregates can be kept as exact integer counters and audited.</p>
-    </div>
-    <div class="cols cols-73">
-      <div class="bench">
-        <label class="field"><span>Write a review</span><textarea id="rv-text" rows="3">The interface is clean and really intuitive. But it crashes when I export 4K, and support never answered.</textarea></label>
-        <div class="row" style="margin-top:8px" id="rv-presets"></div>
-        <div class="tokens" id="rv-tokens" style="margin-top:12px" aria-live="polite"></div>
-        <div class="legend" style="margin-top:8px"><span><sup>¬</sup> negated (×−0.74)</span><span><sup>↑</sup> boosted</span><span><sup>½</sup>/<sup>1½</sup> before/after "but"</span><span><sup>⇧</sup> capitals</span></div>
-      </div>
-      <div class="bench">
-        <div class="row spread"><p class="label">Compound score</p><span class="chip" id="rv-label">—</span></div>
-        <div class="big-num" id="rv-score" style="margin:6px 0 10px">0.000</div>
-        <div class="gauge"><i id="rv-gauge" style="left:50%"></i></div>
-        <div class="row spread small muted" style="margin-top:4px"><span>−1 negative</span><span>+1 positive</span></div>
-        <p class="label" style="margin-top:16px">Aspects mentioned</p>
-        <div class="aspects" id="rv-aspects" style="margin-top:6px"></div>
-      </div>
-    </div>
-    <div class="cols cols-2" style="margin-top:14px">
-      <div class="bench">
-        <p class="label">Held-out evaluation</p>
-        <p class="small muted" style="margin:6px 0 10px" id="ev-blurb"></p>
-        <div class="scroll-x"><table class="confusion" id="confusion"></table></div>
-      </div>
-      <div class="bench">
-        <p class="label">Score by star rating, generated marketplace reviews</p>
-        <svg class="chart" id="ch-stars" viewBox="0 0 420 200" role="img" aria-label="Mean sentiment by stars"></svg>
-        <p class="small muted" id="ev-agree"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ RECS -->
-  <section class="section wrap" id="recs">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 6 · you may also like</p><h2>Two signals, added together</h2></div>
-      <p class="intro">Content similarity (shared tags, same category) works from day one. Co-purchase similarity, the cosine of two products' buyer sets, is kept as atomic counters written during fulfilment. The shipped score is content + ½ × co-purchase. Build a library and watch each recommendation split into the two parts.</p>
-    </div>
-    <div class="cols cols-73">
-      <div class="bench">
-        <p class="label">Your library (pick a few)</p>
-        <div class="lib-chips" id="lib" style="margin-top:8px"></div>
-        <div id="rec-out" style="margin-top:12px"></div>
-        <div class="legend" style="margin-top:8px"><span><i style="background:var(--flow)"></i>content</span><span><i style="background:var(--accent)"></i>½ × co-purchase cosine</span></div>
-      </div>
-      <div class="bench">
-        <p class="label">Co-purchase cosine across the catalogue</p>
-        <canvas class="heat" id="heat" width="270" height="270" aria-label="Heatmap of co-purchase similarity"></canvas>
-        <p class="small muted" id="heat-note" style="margin-top:6px">Hover a cell to read the pair.</p>
-      </div>
-    </div>
-    <div class="bench">
-      <div class="row spread"><p class="label">Leave-last-out evaluation · hit rate @ 5</p><span class="small muted" id="rec-blurb"></span></div>
-      <svg class="chart" id="ch-recs" viewBox="0 0 640 170" role="img" aria-label="Hit rate by method"></svg>
-    </div>
-  </section>
-
-  <!-- ================================================================ SCALE -->
-  <section class="section wrap" id="scale">
-    <div class="section-head">
-      <div><p class="eyebrow">Lab 7 · traffic and money</p><h2>Pay per request, and mostly pay the card network</h2></div>
-      <p class="intro">The simulator replayed a launch day: shopping sessions shaped like a Montréal evening with a 7 pm spike, served by the real API with modelled containers that go cold after idling. Drag the sliders to scale that day; costs come from AWS and Stripe list prices.</p>
-    </div>
-    <div class="cols cols-2">
-      <div class="bench">
-        <p class="label">Launch day, hour by hour</p>
-        <svg class="chart" id="ch-day" viewBox="0 0 640 220" role="img" aria-label="Requests and p95 latency per hour"></svg>
-        <div class="legend"><span><i style="background:var(--flow)"></i>requests per hour</span><span><i style="background:var(--accent)"></i>p95 latency (ms)</span></div>
-      </div>
-      <div class="bench">
-        <p class="label">Cold starts against traffic</p>
-        <svg class="chart" id="ch-cold" viewBox="0 0 640 220" role="img" aria-label="Cold-start share versus requests per second"></svg>
-        <p class="small muted">One function, Poisson arrivals, containers reaped after 7 idle minutes. At a few requests an hour most calls start a fresh container; from about one request a minute almost none do.</p>
-      </div>
-    </div>
-    <div class="bench">
-      <div class="cols cols-37">
-        <div class="stack-form" style="display:grid;gap:12px">
-          <label class="field"><span>Shopping sessions per day: <b id="v-sess">2,400</b></span><input type="range" id="s-sess" min="100" max="200000" step="100" value="2400"></label>
-          <label class="field"><span>Average order: <b id="v-aov">C$65</b></span><input type="range" id="s-aov" min="10" max="300" value="65"></label>
-          <dl class="kv" id="cost-kv"></dl>
-        </div>
-        <div>
-          <svg class="chart" id="ch-cost" viewBox="0 0 640 200" role="img" aria-label="Monthly cost breakdown"></svg>
-          <p class="small muted" id="cost-note"></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================ RESULTS -->
-  <section class="section wrap" id="results">
-    <div class="section-head">
-      <div><p class="eyebrow">Findings</p><h2>What the simulator measured</h2></div>
-      <p class="intro">All numbers come from <code>npm run simulate</code>, which drives the production code paths on the local runtime and audits the final state after every run. Re-run it and you get the same figures: every random choice is seeded.</p>
-    </div>
-    <div class="bench scroll-x"><table class="dtable" id="chaos-table"></table></div>
-    <div class="bench scroll-x"><table class="dtable" id="fn-table"></table></div>
-    <div class="bench scroll-x"><table class="dtable" id="findings"></table></div>
-  </section>
-
-  <!-- ================================================================ BUILD -->
-  <section class="section wrap" id="build">
-    <div class="section-head">
-      <div><p class="eyebrow">Under the bonnet</p><h2>How it is built</h2></div>
-      <p class="intro">One core package holds the domain logic and the HTTP routes. Thin adapters run it on AWS Lambda; the local runtime runs it in Node and in this page. The SAM template is generated from the route table, so the deployed API cannot drift from the code.</p>
-    </div>
-    <div class="cols cols-2">
-      <pre class="tree" id="tree">SoftHub-Lab/
-├─ packages/core/src/      domain + API (runs on Lambda, in Node, in the browser)
-│  ├─ api/                 routes: catalogue, shop, provider, admin, webhook
-│  ├─ store.js             table port + DynamoDB emulator (conditions, GSIs, streams, capacity)
-│  ├─ keys.js              single-table key design + access patterns
-│  ├─ auth.js              roles, JWT checks, local user pool
-│  ├─ payments.js          webhook signatures, fees, test cards
-│  ├─ license.js           HMAC licence keys with a typo-proof checksum
-│  ├─ sentiment.js         lexicon sentiment + aspects + summaries
-│  ├─ recommend.js         content + co-purchase recommendations
-│  ├─ runtime.js           the whole cloud in one process
-│  └─ invariants.js        full-system audit
-├─ services/aws/           Lambda handlers, DynamoDB/Stripe/SES/S3/Cognito adapters
-├─ infra/template.yaml     AWS SAM (generated from the route table)
-├─ web/                    React storefront (AWS mode or local mode)
-├─ sim/                    simulator + sentiment evaluation
-├─ tests/                  node:test suites
-└─ docs/                   this site</pre>
-      <div class="bench">
-        <p class="label">Run it</p>
-        <pre class="code" style="margin-top:8px">npm test                 # unit, API, adapter and audit tests
-npm run simulate         # experiments → results/ and this site
-npm run dev:api          # local API on :8787 (whole cloud in-process)
-cd web &amp;&amp; npm run dev    # storefront (local mode without VITE_API_URL)
-
-sam build -t infra/template.yaml
-sam deploy --guided      # then set the Stripe keys in Secrets Manager
-                         # and register /webhooks/stripe in Stripe</pre>
-        <p class="small muted" style="margin-top:10px">The full API description is in <a href="openapi.json">openapi.json</a>, generated from the same route table.</p>
-      </div>
-    </div>
-    <div class="bench scroll-x"><table class="dtable" id="decisions"></table></div>
-  </section>
+<main id="view" class="wrap">
+  <div class="loading"><span class="spin"></span>Opening the store: six studios, 27 products and a month of orders are being placed through the real API…</div>
 </main>
 
-<footer class="foot page">
+<footer class="foot">
   <div class="wrap">
     <span>SoftHub · designed and built by Nitish Sundarraj</span>
-    <a href="https://github.com/sundarrajnitish/SoftHub-Lab">Source on GitHub</a>
+    <span><button type="button" id="foot-about">How it works</button> · <a href="https://github.com/sundarrajnitish/SoftHub-Lab">Source on GitHub</a></span>
   </div>
 </footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Behind the scenes" aria-hidden="true">
+  <div class="drawer-head">
+    <div><p class="eyebrow">Behind the scenes</p><h3 id="drawer-title">What the cloud just did</h3></div>
+    <button type="button" class="x" id="drawer-close" aria-label="Close">×</button>
+  </div>
+  <div class="scene-arch"><svg id="arch" viewBox="0 0 640 380" role="img" aria-label="Live architecture diagram"></svg></div>
+  <div class="feed" id="feed"><p class="empty">Use the store. Every click shows up here as it travels through the system.</p></div>
+</aside>
+
+<section class="guide" id="guide" aria-label="Demo guide"></section>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="modal-root"></div>
 
 <script type="module" src="js/main.js"></script>
 </body>
